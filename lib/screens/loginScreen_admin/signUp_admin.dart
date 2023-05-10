@@ -11,6 +11,7 @@ import '../../alert_dialog/alert_dialog.dart';
 import '../../api_manager/api_manager.dart';
 import '../auth_screen/auth_screen.dart';
 import '../loginScreen_user/widgets/dropDownBtn.dart';
+import 'widgets/dropDownRole.dart';
 
 class SignUpAdmin extends StatefulWidget {
   const SignUpAdmin({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class SignUpAdmin extends StatefulWidget {
 class _SignUpAdminState extends State<SignUpAdmin> {
   bool isVisible = true;
   String gender = 'Male';
+  String role = 'Doctor';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -138,6 +140,10 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                   SizedBox(
                     height: size.height * 0.015,
                   ),
+                  DropDownRoleBtn(role),
+                  SizedBox(
+                    height: size.height * 0.015,
+                  ),
                   Text('Age',
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -185,6 +191,7 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                           passController.text,
                           nameController.text,
                           phoneController.text,
+                          role,
                           gender,
                           ageController.text
                       );

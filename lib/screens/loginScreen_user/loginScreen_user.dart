@@ -32,9 +32,9 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
           Transitioner(
             context: context,
             child: AuthScreen(),
-            animation: AnimationType.fadeIn, // Optional value
-            duration: Duration(milliseconds: 600), // Optional value
-            replacement: true, // Optional value
+            animation: AnimationType.fadeIn,
+            duration: Duration(milliseconds: 600),
+            replacement: true,
             curveType: CurveType.ease, // Optional value
           );        }, icon: Icon(Icons.arrow_back_ios)),
       ),

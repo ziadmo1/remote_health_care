@@ -1,130 +1,167 @@
-/// message : "patient query successed"
-/// isSuccess : true
-/// data : {"patient":{"_id":"639b3ffcbf9cb7cdcb7a8a32","username":"Ziad Mohamed","gender":"male","phoneNumber":"0121210203","age":76,"device":{"fall":false,"updatedAt":"2022-12-17T13:58:00.728Z","deviceId":"123456789011"},"adminsRequests":[{"username":"saad","role":"doctor","gender":"male","phoneNumber":"01001010333","age":101,"email":"saad@gmail.com"}]}}
-
 class HomeUserRes {
-  HomeUserRes({
-      this.message, 
-      this.isSuccess, 
-      this.data,});
-
-  HomeUserRes.fromJson(dynamic json) {
-    message = json['message'];
-    isSuccess = json['isSuccess'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
-  }
   String? message;
   bool? isSuccess;
   Data? data;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['message'] = message;
-    map['isSuccess'] = isSuccess;
-    if (data != null) {
-      map['data'] = data?.toJson();
-    }
-    return map;
+  HomeUserRes({this.message, this.isSuccess, this.data});
+
+  HomeUserRes.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    isSuccess = json['isSuccess'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['isSuccess'] = this.isSuccess;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
 }
-
-/// patient : {"_id":"639b3ffcbf9cb7cdcb7a8a32","username":"Ziad Mohamed","gender":"male","phoneNumber":"0121210203","age":76,"device":{"fall":false,"updatedAt":"2022-12-17T13:58:00.728Z","deviceId":"123456789011"},"adminsRequests":[{"username":"saad","role":"doctor","gender":"male","phoneNumber":"01001010333","age":101,"email":"saad@gmail.com"}]}
 
 class Data {
-  Data({
-      this.patient,});
-
-  Data.fromJson(dynamic json) {
-    patient = json['patient'] != null ? Patient.fromJson(json['patient']) : null;
-  }
   Patient? patient;
+  List<PatientAdmins>? patientAdmins;
+
+  Data({this.patient, this.patientAdmins});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    patient =
+    json['patient'] != null ? new Patient.fromJson(json['patient']) : null;
+    if (json['patientAdmins'] != null) {
+      patientAdmins = <PatientAdmins>[];
+      json['patientAdmins'].forEach((v) {
+        patientAdmins!.add(new PatientAdmins.fromJson(v));
+      });
+    }
+  }
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (patient != null) {
-      map['patient'] = patient?.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.patient != null) {
+      data['patient'] = this.patient!.toJson();
     }
-    return map;
+    if (this.patientAdmins != null) {
+      data['patientAdmins'] =
+          this.patientAdmins!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
-
 }
 
-/// _id : "639b3ffcbf9cb7cdcb7a8a32"
-/// username : "Ziad Mohamed"
-/// gender : "male"
-/// phoneNumber : "0121210203"
-/// age : 76
-/// device : {"fall":false,"updatedAt":"2022-12-17T13:58:00.728Z","deviceId":"123456789011"}
-/// adminsRequests : [{"username":"saad","role":"doctor","gender":"male","phoneNumber":"01001010333","age":101,"email":"saad@gmail.com"}]
-
 class Patient {
-  Patient({
-      this.id, 
-      this.username, 
-      this.gender, 
-      this.phoneNumber, 
-      this.age, 
-      this.device, 
-      this.adminsRequests,});
+  String? sId;
+  String? username;
+  String? gender;
+  String? phoneNumber;
+  int? age;
+  Device? device;
+  List<AdminsRequests>? adminsRequests;
 
-  Patient.fromJson(dynamic json) {
-    id = json['_id'];
+  Patient(
+      {this.sId,
+        this.username,
+        this.gender,
+        this.phoneNumber,
+        this.age,
+        this.device,
+        this.adminsRequests});
+
+  Patient.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
     username = json['username'];
     gender = json['gender'];
     phoneNumber = json['phoneNumber'];
     age = json['age'];
-    device = json['device'] != null ? Device.fromJson(json['device']) : null;
+    device =
+    json['device'] != null ? new Device.fromJson(json['device']) : null;
     if (json['adminsRequests'] != null) {
-      adminsRequests = [];
+      adminsRequests = <AdminsRequests>[];
       json['adminsRequests'].forEach((v) {
-        adminsRequests?.add(AdminsRequests.fromJson(v));
+        adminsRequests!.add(new AdminsRequests.fromJson(v));
       });
     }
   }
-  String? id;
-  String? username;
-  String? gender;
-  String? phoneNumber;
-  num? age;
-  Device? device;
-  List<AdminsRequests>? adminsRequests;
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['_id'] = id;
-    map['username'] = username;
-    map['gender'] = gender;
-    map['phoneNumber'] = phoneNumber;
-    map['age'] = age;
-    if (device != null) {
-      map['device'] = device?.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['username'] = this.username;
+    data['gender'] = this.gender;
+    data['phoneNumber'] = this.phoneNumber;
+    data['age'] = this.age;
+    if (this.device != null) {
+      data['device'] = this.device!.toJson();
     }
-    if (adminsRequests != null) {
-      map['adminsRequests'] = adminsRequests?.map((v) => v.toJson()).toList();
+    if (this.adminsRequests != null) {
+      data['adminsRequests'] =
+          this.adminsRequests!.map((v) => v.toJson()).toList();
     }
-    return map;
+    return data;
   }
-
 }
 
-/// username : "saad"
-/// role : "doctor"
-/// gender : "male"
-/// phoneNumber : "01001010333"
-/// age : 101
-/// email : "saad@gmail.com"
+class Device {
+  String? deviceId;
+  bool? fall;
+  int? heartRate;
+  int? spo2;
+  double? temperature;
+  double? lat;
+  double? lng;
+
+  Device(
+      {this.deviceId,
+        this.fall,
+        this.heartRate,
+        this.spo2,
+        this.temperature,
+        this.lat,
+        this.lng});
+
+  Device.fromJson(Map<String, dynamic> json) {
+    deviceId = json['deviceId'];
+    fall = json['fall'];
+    heartRate = json['heartRate'];
+    spo2 = json['spo2'];
+    temperature = json['temperature'];
+    lat = json['lat'];
+    lng = json['lng'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['deviceId'] = this.deviceId;
+    data['fall'] = this.fall;
+    data['heartRate'] = this.heartRate;
+    data['spo2'] = this.spo2;
+    data['temperature'] = this.temperature;
+    data['lat'] = this.lat;
+    data['lng'] = this.lng;
+    return data;
+  }
+}
 
 class AdminsRequests {
-  AdminsRequests({
-      this.username, 
-      this.role, 
-      this.gender, 
-      this.phoneNumber, 
-      this.age, 
-      this.email,});
+  String? username;
+  String? role;
+  String? gender;
+  String? phoneNumber;
+  int? age;
+  String? email;
 
-  AdminsRequests.fromJson(dynamic json) {
+  AdminsRequests(
+      {this.username,
+        this.role,
+        this.gender,
+        this.phoneNumber,
+        this.age,
+        this.email});
+
+  AdminsRequests.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     role = json['role'];
     gender = json['gender'];
@@ -132,51 +169,40 @@ class AdminsRequests {
     age = json['age'];
     email = json['email'];
   }
-  String? username;
-  String? role;
-  String? gender;
-  String? phoneNumber;
-  num? age;
-  String? email;
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['username'] = username;
-    map['role'] = role;
-    map['gender'] = gender;
-    map['phoneNumber'] = phoneNumber;
-    map['age'] = age;
-    map['email'] = email;
-    return map;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['username'] = this.username;
+    data['role'] = this.role;
+    data['gender'] = this.gender;
+    data['phoneNumber'] = this.phoneNumber;
+    data['age'] = this.age;
+    data['email'] = this.email;
+    return data;
   }
-
 }
 
-/// fall : false
-/// updatedAt : "2022-12-17T13:58:00.728Z"
-/// deviceId : "123456789011"
+class PatientAdmins {
+  String? username;
+  String? role;
+  String? phoneNumber;
+  String? email;
 
-class Device {
-  Device({
-      this.fall, 
-      this.updatedAt, 
-      this.deviceId,});
+  PatientAdmins({this.username, this.role, this.phoneNumber, this.email});
 
-  Device.fromJson(dynamic json) {
-    fall = json['fall'];
-    updatedAt = json['updatedAt'];
-    deviceId = json['deviceId'];
+  PatientAdmins.fromJson(Map<String, dynamic> json) {
+    username = json['username'];
+    role = json['role'];
+    phoneNumber = json['phoneNumber'];
+    email = json['email'];
   }
-  bool? fall;
-  String? updatedAt;
-  String? deviceId;
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['fall'] = fall;
-    map['updatedAt'] = updatedAt;
-    map['deviceId'] = deviceId;
-    return map;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['username'] = this.username;
+    data['role'] = this.role;
+    data['phoneNumber'] = this.phoneNumber;
+    data['email'] = this.email;
+    return data;
   }
-
 }

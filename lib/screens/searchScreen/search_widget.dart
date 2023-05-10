@@ -14,6 +14,16 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
 
+  bool isAdd = false;
+  @override
+  void initState() {
+    isAdd = widget.patient.isRequestedAlready??false;
+    setState(() {
+
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -67,6 +77,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               ),
               InkWell(
                 onTap: ()async{
+                  isAdd = true;
                   await ApiManager.sendReqAdmin(widget.patient.device?.deviceId??'', widget.emailDoctor);
                   setState(() {
 
@@ -74,17 +85,16 @@ class _SearchWidgetState extends State<SearchWidget> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  width: widget.patient.isRequestedAlready == false ? size.width * 0.15 : size.width * 0.28,
+                  width: isAdd == false ? size.width * 0.15 : size.width * 0.28,
                     height: size.height * 0.04,
                     decoration: BoxDecoration(
-                        color:  widget.patient.isRequestedAlready == false ? MyTheme.lightOrange : Colors.white,
+                        color:  isAdd == false ? MyTheme.lightOrange : Colors.white,
                       borderRadius: BorderRadius.circular(10)
                     ),
-                    child: Text(
-                     widget.patient.isRequestedAlready == false? 'Add' : 'Pending...',
+                    child: Text(isAdd == false ? 'Add' : 'Pending...',
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontSize: 18,
-                      color:  widget.patient.isRequestedAlready == false ? Colors.white : MyTheme.lightOrange
+                      color: isAdd == false ? Colors.white : MyTheme.lightOrange
                     ),
                     )),
               ),

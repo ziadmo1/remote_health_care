@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:remote_healthcare/screens/loginScreen_user/loginScreen_user.dart';
 import 'package:transitioner/transitioner.dart';
 
+import '../loginScreen_admin/loginScreen_admin.dart';
+
 class AuthScreen extends StatefulWidget {
   static const String routeName = 'auth';
 
@@ -79,14 +81,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                   SizedBox(height: size.height * 0.01,),
                   InkWell(
                     onTap: (){
-              /*        Transitioner(
+                      Transitioner(
                         context: context,
                         child: LoginScreenAdmin(),
                         animation: AnimationType.fadeIn, // Optional value
                         duration: Duration(milliseconds: 600), // Optional value
                         replacement: true, // Optional value
                         curveType: CurveType.ease, // Optional value
-                      );  */
+                      );
                     },
                     child: Card(
                       elevation: 4,

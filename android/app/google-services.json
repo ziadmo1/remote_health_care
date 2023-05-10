@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "966502957709",
+    "project_id": "remote-d581e",
+    "storage_bucket": "remote-d581e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966502957709:android:18cb4fa49234df85fdd8c4",
+        "android_client_info": {
+          "package_name": "com.example.remote_healthcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966502957709-ligahmjic4vu8vgqn3aop5b0shbo4dba.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.remote_healthcare",
+            "certificate_hash": "eab24e3712ba908e22290a1fc4549747bc3e9d91"
+          }
+        },
+        {
+          "client_id": "966502957709-iss9bfkcs81lqu7q615cbsj1n3ar3eme.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4Ju3CqrpEbV4PxKtrVMgwengCFxd7dLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966502957709-iss9bfkcs81lqu7q615cbsj1n3ar3eme.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

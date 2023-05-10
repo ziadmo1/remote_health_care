@@ -6,6 +6,7 @@ import 'package:remote_healthcare/screens/loginScreen_admin/signUp_admin.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/materialBtn.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/textButton.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/textForm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transitioner/transitioner.dart';
 
 import '../../alert_dialog/alert_dialog.dart';
@@ -132,9 +133,10 @@ class _LoginScreenAdminState extends State<LoginScreenAdmin> {
                           hideLoading(context);
                         });
                         if (auth.isSuccess == true) {
+                          SharedPreferences prefs =await SharedPreferences.getInstance();
+                         await prefs.setString('tokenAdmin', auth.data?.admin?.sId??'');
                           Navigator.pushReplacementNamed(
-                              context, HomeScreenAdmin.routeName,
-                              arguments: auth.data?.doctor);
+                              context, HomeScreenAdmin.routeName,);
                         } else {
                           showMessage(context,
                               dialogType: DialogType.error,

@@ -27,7 +27,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Container(
           padding: EdgeInsets.all(size.width * 0.03),
-          height: size.height * 0.145,
+          height: size.height * 0.16,
           width: double.infinity,
           child: Row(
             children: [
@@ -57,7 +57,18 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                       height: size.height * 0.01,
                     ),
                     Text(
-                      'Role:'.toUpperCase(),
+                      'Email: ${widget.adminsRequests.email}'
+                          .toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontSize: 16, color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    Text(
+                      'Role: ${widget.adminsRequests.role}'.toUpperCase(),
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/loginScreen_admin/models/AuthAdminRes.dart';
 import '../screens/loginScreen_user/models/AuthUserRes.dart';
+import '../screens/notificationScreenAdmin/models/notifyAdminRes.dart';
 import '../screens/searchScreen/models/SearchRes.dart';
 
 class ApiManager{
@@ -22,12 +23,13 @@ class ApiManager{
     var json = jsonDecode(response.body);
     return AuthUserRes.fromJson(json);
   }
-  static Future<AuthAdminRes> createAccountAdmin(String email,String pass,String name,String phone, String gender,String age)async{
+  static Future<AuthAdminRes> createAccountAdmin(String email,String pass,String name,String phone,String role, String gender,String age)async{
     var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins/signup');
     var response = await http.post(url,body: {
       "username": name,
       "email": email,
       "password": pass,
+      "role": role,
       "gender": gender,
       "phoneNumber": phone,
       "age": age,
@@ -53,6 +55,22 @@ class ApiManager{
     var json = jsonDecode(response.body);
     return SearchRes.fromJson(json);
   }
+  static Future<NotifyAdminRes> notifyAdmin(String id,)async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins',{
+      'id':id
+    });
+    var response = await http.get(url);
+    var json = jsonDecode(response.body);
+    return NotifyAdminRes.fromJson(json);
+  }
+  static Future<AuthAdminRes> dataAdmin(String id,)async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins/patients',{
+      'id':id
+    });
+    var response = await http.get(url);
+    var json = jsonDecode(response.body);
+    return AuthAdminRes.fromJson(json);
+  }
   static Future<HomeUserRes> homeDataUser()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/patients/signin',{
@@ -62,6 +80,7 @@ class ApiManager{
     var json = jsonDecode(response.body);
     return HomeUserRes.fromJson(json);
   }
+
   static Future<AuthUserRes> sendReqAdmin(String deviceId,String email)async{
     var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins/request_patient');
     var response = await http.put(url,body: {
