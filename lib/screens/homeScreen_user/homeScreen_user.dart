@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +29,17 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
   getPref() async {
     prefs = await SharedPreferences.getInstance();
   }
-
+  int index = 0;
+  Patient? patient;
+  List<PatientAdmins>? patientAdmin;
   @override
   void initState() {
+    Future.delayed(Duration(seconds: 2),() {
+      index++;
+      setState(() {
+
+      });
+    },);
     getPref();
     super.initState();
     initPush();
@@ -45,15 +54,13 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () async {
-              await prefs.remove('userId');
-              Navigator.pushReplacementNamed(
-                context,
-                AuthScreen.routeName,
-              );
-            },
-            icon: Icon(Icons.logout)),
+        leading: IconButton(onPressed: ()async{
+          await prefs.remove('userId');
+          Navigator.pushReplacementNamed(
+            context,
+            AuthScreen.routeName,
+          );
+        }, icon: Icon(Icons.logout)),
         centerTitle: true,
         toolbarHeight: 70,
         title: Text('Welcome!'),
@@ -67,250 +74,268 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
               Navigator.pushNamed(context, NotificationScreen.routeName);
             }, icon: Icon(Icons.notifications,color: Colors.white,),
           )
-            )
+            ),
         ],
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            FutureBuilder<HomeUserRes>(
-                future: ApiManager.homeDataUser(),
-                builder: (context, snapshot) {
-                  var patient = snapshot.data?.data?.patient;
-                  var patientAdmin = snapshot.data?.data?.patientAdmins;
-                  return Column(children: [
-                    Card(
-                      elevation: 8,
-                      color: Colors.white,
-                      margin: EdgeInsets.all(size.width * 0.05),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Container(
-                        padding: EdgeInsets.all(size.width * 0.02),
-                        height: size.height * 0.3,
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: FutureBuilder<HomeUserRes>(
+          future: ApiManager.homeDataUser(),
+          builder: (context, snapshot) {
+               patient = snapshot.data?.data?.patient;
+               patientAdmin = snapshot.data?.data?.patientAdmins;
+            return index == 0 ? Center(child: CircularProgressIndicator(color: Colors.white,)) : SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(children: [
+                Card(
+                  elevation: 8,
+                  color: Colors.white,
+                  margin: EdgeInsets.all(size.width * 0.05),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Container(
+                    padding: EdgeInsets.all(size.width * 0.02),
+                    height: size.height * 0.3,
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                values == null || temp == '-999'&&spo2 == -999&& heartRate == -999 ||  temp == '' && spo2 == 0 && heartRate == 0
-                                    ? Lottie.asset('assets/activeRed.json',
-                                     width: size.width * 0.06,
-                                        fit: BoxFit.fill)
-                                    : Lottie.asset('assets/activeGreen.json',
-                                        width: size.width * 0.06,
-                                        fit: BoxFit.fill),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Text(
-                                  patient?.username ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        fontSize: 30,
-                                      ),
-                                ),
-                              ],
+                            values == null || temp == '-999'&&spo2 == -999&& heartRate == -999 ||  temp == '' && spo2 == 0 && heartRate == 0
+                                ? Lottie.asset('assets/activeRed.json',
+                                 width: size.width * 0.06,
+                                    fit: BoxFit.fill)
+                                : Lottie.asset('assets/activeGreen.json',
+                                    width: size.width * 0.06,
+                                    fit: BoxFit.fill),
+                            SizedBox(
+                              width: size.width * 0.01,
                             ),
-                            Spacer(),
-                            Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Lottie.asset('assets/heartRate.json',
-                                        width: size.width * 0.25,
-                                        fit: BoxFit.fill),
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
-                                    values == null || heartRate == -999 || heartRate == 0
-                                        ? Lottie.asset('assets/loading.json',
-                                            width: size.width * 0.25,
-                                            fit: BoxFit.fill)
-                                        : Text(
-                                            heartRate.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                          ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.03,
-                                ),
-                                Column(
-                                  children: [
-                                    Lottie.asset('assets/spo2.json',
-                                        width: size.width * 0.3,
-                                        height: size.height * 0.115,
-                                        fit: BoxFit.fill),
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
-                                    values == null || spo2 == -999 || spo2 == 0
-                                        ? Lottie.asset('assets/loading.json',
-                                            width: size.width * 0.25,
-                                            fit: BoxFit.fill)
-                                        : Text(
-                                            spo2.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                          ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.03,
-                                ),
-                                Column(
-                                  children: [
-                                    Lottie.asset('assets/temp.json',
-                                        width: size.width * 0.25,
-                                        fit: BoxFit.fill),
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
-                                    values == null || temp == '-999' || temp == ''
-                                        ? Lottie.asset('assets/loading.json',
-                                            width: size.width * 0.25,
-                                            fit: BoxFit.fill)
-                                        : Text(
-                                            double.parse(temp).toStringAsFixed(2),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                          ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.015,
-                    ),
-                    Card(
-                      color: Colors.white,
-                      elevation: 12,
-                      margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Container(
-                        padding: EdgeInsets.all(size.width * 0.03),
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             Text(
-                              'Your Care Giver',
+                              patient?.username ?? '',
+                              textAlign: TextAlign.center,
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyMedium
+                                  .titleLarge
                                   ?.copyWith(
-                                      fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.02,
-                            ),
-                            ListView.separated(
-                                physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) => Card(
-                                      color: MyTheme.lightOrange,
-                                      elevation: 7,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: Container(
-                                        padding:
-                                            EdgeInsets.all(size.width * 0.02),
-                                        width: double.infinity,
-                                        height: size.height * 0.15,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              'Name: ${patientAdmin?[index].username}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              'Role: ${patientAdmin?[index].role}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              'Email: ${patientAdmin?[index].email}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              'Phone Number: ${patientAdmin?[index].phoneNumber}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                shrinkWrap: true,
-                                separatorBuilder: (context, index) => SizedBox(
-                                      height: size.height * 0.02,
-                                    ),
-                                itemCount: patientAdmin?.length??0
+                                    fontSize: 30,
+                                  ),
                             ),
                           ],
                         ),
-                      ),
-                    )
-                  ]);
-                }),
-          ],
-        ),
-      ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Column(
+                              children: [
+                                Lottie.asset('assets/heartRate.json',
+                                    width: size.width * 0.25,
+                                    fit: BoxFit.fill),
+                                SizedBox(
+                                  height: size.height * 0.01,
+                                ),
+                                values == null || heartRate == -999 || heartRate == 0
+                                    ? Lottie.asset('assets/loading.json',
+                                        width: size.width * 0.25,
+                                        fit: BoxFit.fill)
+                                    : Text(
+                                        heartRate.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                      ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: size.width * 0.03,
+                            ),
+                            Column(
+                              children: [
+                                Lottie.asset('assets/spo2.json',
+                                    width: size.width * 0.3,
+                                    height: size.height * 0.115,
+                                    fit: BoxFit.fill),
+                                SizedBox(
+                                  height: size.height * 0.01,
+                                ),
+                                values == null || spo2 == -999 || spo2 == 0
+                                    ? Lottie.asset('assets/loading.json',
+                                        width: size.width * 0.25,
+                                        fit: BoxFit.fill)
+                                    : Text(
+                                        spo2.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                      ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: size.width * 0.03,
+                            ),
+                            Column(
+                              children: [
+                                Lottie.asset('assets/temp.json',
+                                    width: size.width * 0.25,
+                                    fit: BoxFit.fill),
+                                SizedBox(
+                                  height: size.height * 0.01,
+                                ),
+                                values == null || temp == '-999' || temp == ''
+                                    ? Lottie.asset('assets/loading.json',
+                                        width: size.width * 0.25,
+                                        fit: BoxFit.fill)
+                                    : Text(
+                                        temp,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                      ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.015,
+                ),
+                Card(
+                  color: Colors.white,
+                  elevation: 12,
+                  margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Container(
+                    padding: EdgeInsets.all(size.width * 0.03),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your Care Giver',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        ListView.separated(
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) => Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.startToEnd,
+                              onDismissed: (direction)async{
+                              await ApiManager.deleteUser(deviceId: patient?.device?.deviceId??'', adminEmail: patientAdmin?[index].email??'');
+                              setState(() {
+
+                              });
+                              },
+                              background: Container(
+                                padding: EdgeInsets.only(left: 50),
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(15)
+                                ),
+                                child: Text('Delete',style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                                ),),
+                              ),
+                              child: Card(
+                                    color: MyTheme.lightOrange,
+                                    elevation: 7,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Container(
+                                      padding: EdgeInsets.all(size.width * 0.02),
+                                      width: double.infinity,
+                                      height: size.height * 0.15,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Text(
+                                            'Name: ${patientAdmin?[index].username}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black),
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.01,
+                                          ),
+                                          Text(
+                                            'Role: ${patientAdmin?[index].role}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black),
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.01,
+                                          ),
+                                          Text(
+                                            'Email: ${patientAdmin?[index].email}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black),
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.01,
+                                          ),
+                                          Text(
+                                            'Phone Number: ${patientAdmin?[index].phoneNumber}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                            ),
+                            shrinkWrap: true,
+                            separatorBuilder: (context, index) => SizedBox(
+                                  height: size.height * 0.02,
+                                ),
+                            itemCount: patientAdmin?.length??0
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ]),
+            );
+          }),
     );
   }
 
@@ -331,7 +356,6 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     heartRate = values['heartRate'] ?? heartRate;
     temp = values['temperature'] ?? temp;
     notify = values['adminsRequestsLength'] ?? notify;
-    print(event);
     setState(() {});
   }
 }

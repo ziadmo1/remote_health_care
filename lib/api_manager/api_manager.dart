@@ -9,7 +9,6 @@ import '../screens/notificationScreenAdmin/models/notifyAdminRes.dart';
 import '../screens/searchScreen/models/SearchRes.dart';
 
 class ApiManager{
-
   static Future<AuthUserRes> createAccountUser(String deviceId,String pass,String name,String phone, String gender,String age)async{
     var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/patients/signup');
     var response = await http.post(url,body: {
@@ -95,6 +94,24 @@ class ApiManager{
     var response = await http.put(url,body: {
       'deviceId' : deviceId,
       'adminEmail' : adminEmail,
+    });
+    var json = jsonDecode(response.body);
+    return HomeUserRes.fromJson(json);
+  }
+  static Future<HomeUserRes> deleteUser({required String deviceId,required String adminEmail})async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins/cancel_patient');
+    var response = await http.put(url,body: {
+      'deviceId' : deviceId,
+      'adminEmail' : adminEmail,
+    });
+    var json = jsonDecode(response.body);
+    return HomeUserRes.fromJson(json);
+  }
+  static Future<HomeUserRes> deleteAdmin({ required String phone,required String adminEmail})async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins/cancel_patient');
+    var response = await http.put(url,body: {
+      'adminEmail' : adminEmail,
+      'phoneNumber' : phone,
     });
     var json = jsonDecode(response.body);
     return HomeUserRes.fromJson(json);

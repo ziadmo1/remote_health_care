@@ -1,20 +1,16 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/loginScreen_admin.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/materialBtn.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/textButton.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/textForm.dart';
-import 'package:transitioner/transitioner.dart';
-
 import '../../alert_dialog/alert_dialog.dart';
 import '../../api_manager/api_manager.dart';
 import '../auth_screen/auth_screen.dart';
 import '../loginScreen_user/widgets/dropDownBtn.dart';
-import 'widgets/dropDownRole.dart';
 
 class SignUpAdmin extends StatefulWidget {
-  const SignUpAdmin({Key? key}) : super(key: key);
+  static const String routeName = 'createAdmin';
 
   @override
   State<SignUpAdmin> createState() => _SignUpAdminState();
@@ -23,7 +19,9 @@ class SignUpAdmin extends StatefulWidget {
 class _SignUpAdminState extends State<SignUpAdmin> {
   bool isVisible = true;
   String gender = 'Male';
+  List<String> roles = ['Doctor', 'Care Giver'];
   String role = 'Doctor';
+  String roleData = 'doctor';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -35,16 +33,12 @@ class _SignUpAdminState extends State<SignUpAdmin> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar:  AppBar(
-          leading: IconButton(onPressed: (){
-            Transitioner(
-              context: context,
-              child: AuthScreen(),
-              animation: AnimationType.fadeIn, // Optional value
-              duration: Duration(milliseconds: 600), // Optional value
-              replacement: true, // Optional value
-              curveType: CurveType.ease, // Optional value
-            );        }, icon: Icon(Icons.arrow_back_ios)),
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+              },
+              icon: Icon(Icons.arrow_back_ios)),
         ),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -74,33 +68,34 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                     height: size.height * 0.03,
                   ),
                   TextFiield(
-                    controller: nameController,
+                      controller: nameController,
                       hint: 'Full Name',
                       prefIcon: Icons.person_outline,
-                      validate: (text) { if (text == null || text.trim().isEmpty) {
-                        return 'Full Name must not be empty';
-                      }
-                      return null;}),
+                      validate: (text) {
+                        if (text == null || text.trim().isEmpty) {
+                          return 'Full Name must not be empty';
+                        }
+                        return null;
+                      }),
                   SizedBox(
                     height: size.height * 0.015,
                   ),
-            TextFiield(
-              hint: 'Phone Number',
-              prefIcon: Icons.phone,
-              validate: (text) {
-                if (text == null || text.trim().isEmpty) {
-                  return 'Phone Number must not be empty';
-                }
-                return null;
-              },
-              controller: phoneController,
-            ),
-            SizedBox(
-              height: size.height * 0.015,
-            ),
-
                   TextFiield(
-                    controller: emailController,
+                    hint: 'Phone Number',
+                    prefIcon: Icons.phone,
+                    validate: (text) {
+                      if (text == null || text.trim().isEmpty) {
+                        return 'Phone Number must not be empty';
+                      }
+                      return null;
+                    },
+                    controller: phoneController,
+                  ),
+                  SizedBox(
+                    height: size.height * 0.015,
+                  ),
+                  TextFiield(
+                      controller: emailController,
                       hint: 'Email Address',
                       prefIcon: Icons.email_outlined,
                       validate: (text) {
@@ -140,15 +135,60 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                   SizedBox(
                     height: size.height * 0.015,
                   ),
-                  DropDownRoleBtn(role),
+                  Text(
+                    'Role',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(fontSize: 28),
+                  ),
                   SizedBox(
                     height: size.height * 0.015,
                   ),
-                  Text('Age',
-                    textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontSize: 28
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: size.width * 0.06),
+                    child: DropdownButton<String>(
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                      isExpanded: true,
+                      underline: Container(
+                        color: Colors.white,
+                        height: 1,
+                      ),
+                      iconEnabledColor: Colors.black,
+                      items: roles.map((item) {
+                        return DropdownMenuItem<String>(
+                            child: Text(
+                              item,
+                            ),
+                            value: item);
+                      }).toList(),
+                      onChanged: (text) {
+                        setState(() {
+                          role = text!;
+                          if (role == 'Doctor') {
+                            roleData = 'doctor';
+                          } else {
+                            roleData = 'caregiver';
+                          }
+                        });
+                      },
+                      value: role,
                     ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.015,
+                  ),
+                  Text(
+                    'Age',
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(fontSize: 28),
                   ),
                   SizedBox(
                     height: size.height * 0.015,
@@ -171,19 +211,15 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                   SizedBox(
                     height: size.height * 0.03,
                   ),
-                  MaterialBtn('Already have an account? ', 'Login',()=> Transitioner(
-                    context: context,
-                    child: LoginScreenAdmin(),
-                    animation: AnimationType.slideRight, // Optional value
-                    duration: Duration(milliseconds: 500), // Optional value
-                    replacement: true, // Optional value
-                    curveType: CurveType.ease, // Optional value
-                  ),
-                  ),
+                  MaterialBtn(
+                      'Already have an account? ',
+                      'Login',
+                      () => Navigator.pushReplacementNamed(
+                          context, LoginScreenAdmin.routeName)),
                   SizedBox(
                     height: size.height * 0.03,
                   ),
-                  TextButtoon('Sign Up',()async{
+                  TextButtoon('Sign Up', () async {
                     if (formKey.currentState!.validate()) {
                       showLoading(context, 'Loading....', isCancelable: false);
                       var auth = await ApiManager.createAccountAdmin(
@@ -191,22 +227,15 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                           passController.text,
                           nameController.text,
                           phoneController.text,
-                          role,
+                          roleData,
                           gender,
-                          ageController.text
-                      );
+                          ageController.text);
                       await Future.delayed(Duration(seconds: 2), () {
                         hideLoading(context);
                       });
                       if (auth.isSuccess == true) {
-                        Transitioner(
-                          context: context,
-                          child: LoginScreenAdmin(),
-                          animation: AnimationType.slideRight, // Optional value
-                          duration: Duration(milliseconds: 500), // Optional value
-                          replacement: true, // Optional value
-                          curveType: CurveType.ease, // Optional value
-                        );
+                        Navigator.pushReplacementNamed(
+                            context, LoginScreenAdmin.routeName);
                       } else {
                         showMessage(context,
                             dialogType: DialogType.error,

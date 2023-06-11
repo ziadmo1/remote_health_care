@@ -6,13 +6,14 @@ import 'package:remote_healthcare/screens/auth_screen/auth_screen.dart';
 import 'package:remote_healthcare/screens/homeScreen_user/homeScreen_user.dart';
 import 'package:remote_healthcare/screens/loginScreen_user/signUp_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transitioner/transitioner.dart';
 import '../loginScreen_admin/widgets/materialBtn.dart';
 import '../loginScreen_admin/widgets/textButton.dart';
 import '../loginScreen_admin/widgets/textForm.dart';
 
 
 class LoginScreenUser extends StatefulWidget {
+  static const String routeName = 'loginPatient';
+
   @override
   State<LoginScreenUser> createState() => _LoginScreenUserState();
 }
@@ -29,14 +30,8 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: (){
-          Transitioner(
-            context: context,
-            child: AuthScreen(),
-            animation: AnimationType.fadeIn,
-            duration: Duration(milliseconds: 600),
-            replacement: true,
-            curveType: CurveType.ease, // Optional value
-          );        }, icon: Icon(Icons.arrow_back_ios)),
+          Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+        }, icon: Icon(Icons.arrow_back_ios)),
       ),
         body: Center(
           child: SingleChildScrollView(
@@ -111,14 +106,7 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
                     MaterialBtn(
                       'Not have an account? ',
                       'Sign up',
-                      () => Transitioner(
-                        context: context,
-                        child: SignUpUser(),
-                        animation: AnimationType.slideLeft,
-                        duration: Duration(milliseconds: 500),
-                        replacement: true,
-                        curveType: CurveType.ease,
-                      ),
+                      () =>                       Navigator.pushReplacementNamed(context, SignUpUser.routeName)
                     ),
                     SizedBox(
                       height: size.height * 0.03,

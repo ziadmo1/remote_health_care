@@ -98,7 +98,7 @@ class Device {
   bool? fall;
   int? heartRate;
   int? spo2;
-  double? temperature;
+  String? temperature;
 
   Device(
       {this.deviceId, this.fall, this.heartRate, this.spo2, this.temperature});

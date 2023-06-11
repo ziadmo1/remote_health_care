@@ -138,7 +138,7 @@ class Device {
   bool? fall;
   int? heartRate;
   int? spo2;
-  double? temperature;
+  String? temperature;
   String? updatedAt;
   double? lat;
   double? lng;

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:remote_healthcare/screens/loginScreen_user/loginScreen_user.dart';
-import 'package:transitioner/transitioner.dart';
-
 import '../loginScreen_admin/loginScreen_admin.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -26,6 +24,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         )
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         body: Column(
           children: [
@@ -50,14 +49,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                   SizedBox(height: size.height * 0.05,),
               InkWell(
                 onTap: (){
-                  Transitioner(
-                    context: context,
-                    child: LoginScreenUser(),
-                    animation: AnimationType.fadeIn, // Optional value
-                    duration: Duration(milliseconds: 600), // Optional value
-                    replacement: true, // Optional value
-                    curveType: CurveType.ease, // Optional value
-                  );           },
+                  Navigator.pushReplacementNamed(context, LoginScreenUser.routeName);
+                },
                 child: Card(
                         elevation: 4,
                         color: Colors.white,
@@ -81,14 +74,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                   SizedBox(height: size.height * 0.01,),
                   InkWell(
                     onTap: (){
-                      Transitioner(
-                        context: context,
-                        child: LoginScreenAdmin(),
-                        animation: AnimationType.fadeIn, // Optional value
-                        duration: Duration(milliseconds: 600), // Optional value
-                        replacement: true, // Optional value
-                        curveType: CurveType.ease, // Optional value
-                      );
+                    Navigator.pushReplacementNamed(context, LoginScreenAdmin.routeName);
                     },
                     child: Card(
                       elevation: 4,

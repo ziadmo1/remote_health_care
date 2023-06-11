@@ -109,7 +109,7 @@ class Device {
   bool? fall;
   int? heartRate;
   int? spo2;
-  double? temperature;
+  String? temperature;
   double? lat;
   double? lng;
 

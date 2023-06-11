@@ -7,14 +7,11 @@ import 'package:remote_healthcare/screens/loginScreen_admin/widgets/materialBtn.
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/textButton.dart';
 import 'package:remote_healthcare/screens/loginScreen_admin/widgets/textForm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transitioner/transitioner.dart';
-
 import '../../alert_dialog/alert_dialog.dart';
 import '../../api_manager/api_manager.dart';
 
 class LoginScreenAdmin extends StatefulWidget {
-  const LoginScreenAdmin({Key? key}) : super(key: key);
-
+  static const String routeName = 'loginAdmin';
   @override
   State<LoginScreenAdmin> createState() => _LoginScreenAdminState();
 }
@@ -30,17 +27,13 @@ class _LoginScreenAdminState extends State<LoginScreenAdmin> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar:  AppBar(
-        leading: IconButton(onPressed: (){
-          Transitioner(
-            context: context,
-            child: AuthScreen(),
-            animation: AnimationType.fadeIn, // Optional value
-            duration: Duration(milliseconds: 600), // Optional value
-            replacement: true, // Optional value
-            curveType: CurveType.ease, // Optional value
-          );        }, icon: Icon(Icons.arrow_back_ios)),
-      ),
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+              },
+              icon: Icon(Icons.arrow_back_ios)),
+        ),
         body: Center(
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
@@ -112,14 +105,7 @@ class _LoginScreenAdminState extends State<LoginScreenAdmin> {
                     MaterialBtn(
                       'Not have an account? ',
                       'Sign up',
-                          () => Transitioner(
-                        context: context,
-                        child: SignUpAdmin(),
-                        animation: AnimationType.slideLeft,
-                        duration: Duration(milliseconds: 500),
-                        replacement: true,
-                        curveType: CurveType.ease,
-                      ),
+                      () => Navigator.pushReplacementNamed(context, SignUpAdmin.routeName)
                     ),
                     SizedBox(
                       height: size.height * 0.03,
@@ -128,15 +114,20 @@ class _LoginScreenAdminState extends State<LoginScreenAdmin> {
                       if (formKey.currentState!.validate()) {
                         showLoading(context, 'Loading....',
                             isCancelable: false);
-                        var auth = await ApiManager.loginAccountAdmin(emailController.text, passController.text);
+                        var auth = await ApiManager.loginAccountAdmin(
+                            emailController.text, passController.text);
                         await Future.delayed(Duration(seconds: 2), () {
                           hideLoading(context);
                         });
                         if (auth.isSuccess == true) {
-                          SharedPreferences prefs =await SharedPreferences.getInstance();
-                         await prefs.setString('tokenAdmin', auth.data?.admin?.sId??'');
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString(
+                              'tokenAdmin', auth.data?.admin?.sId ?? '');
                           Navigator.pushReplacementNamed(
-                              context, HomeScreenAdmin.routeName,);
+                            context,
+                            HomeScreenAdmin.routeName,
+                          );
                         } else {
                           showMessage(context,
                               dialogType: DialogType.error,

@@ -22,6 +22,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
   prefData()async{
     preferences = await SharedPreferences.getInstance();
   }
+  List<Patients>? patients;
   int index = 0;
   loading(){
     index++;
@@ -31,7 +32,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
   }
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3),() => loading(),);
+    Future.delayed(Duration(seconds: 2),() => loading(),);
     prefData();
    oneSignal();
     super.initState();
@@ -42,13 +43,14 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: ()async{
+        leading:  IconButton(onPressed: ()async{
           await OneSignal.shared.disablePush(true);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.remove('tokenAdmin');
           Navigator.pushReplacementNamed(
             context, AuthScreen.routeName,);
         }, icon: Icon(Icons.logout)),
+
         centerTitle: true,
         toolbarHeight: 70,
         title: Text('Welcome!'),
@@ -56,13 +58,14 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
            IconButton(onPressed: ()async{
             await Navigator.pushNamed(context, NotificationAdminScreen.routeName,arguments:preferences?.getString('tokenAdmin'));
             }, icon: Icon(Icons.notifications,color: Colors.white,),
-          )
+          ),
         ],
       ),
       body: FutureBuilder<AuthAdminRes>(
         future: ApiManager.dataAdmin(preferences?.getString('tokenAdmin')??''),
         builder: (context, snapshot) {
           var admin = snapshot.data?.data?.admin;
+          patients = admin?.patients;
           id = admin?.sId;
           return index == 0 ?Center(child: CircularProgressIndicator(color: Colors.white,)) : SingleChildScrollView(
             physics: BouncingScrollPhysics(),
@@ -111,61 +114,84 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                           ListView.separated(
                             shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => Card(
-                                color: MyTheme.lightOrange,
-                                elevation: 7,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)
+                              itemBuilder: (context, index) => Dismissible(
+                                key: UniqueKey(),
+                                direction: DismissDirection.startToEnd,
+                                onDismissed: (direction)async{
+                                  await ApiManager.deleteAdmin(phone: patients?[index].phoneNumber??'',adminEmail: admin?.email??'');
+                                  setState(() {
+
+                                  });
+                                },
+                                background: Container(
+                                  padding: EdgeInsets.only(left: 50),
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(15)
+                                  ),
+                                  child: Text('Delete',style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold
+                                  ),),
                                 ),
-                                child: Container(
-                                  padding: EdgeInsets.all(size.width * 0.02),
-                                  width: double.infinity,
-                                  height: size.height * 0.15,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: size.width * 0.65,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text('Name: ${admin?.patients![index].username?.toUpperCase()??''}',
-                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                  fontSize: 16,
-                                                  color: Colors.black
+                                child: Card(
+                                  color: MyTheme.lightOrange,
+                                  elevation: 7,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(size.width * 0.02),
+                                    width: double.infinity,
+                                    height: size.height * 0.15,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: size.width * 0.65,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text('Name: ${admin?.patients![index].username?.toUpperCase()??''}',
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: size.height * 0.01,),
-                                            Text('Gender: ${admin?.patients![index].gender?.toUpperCase()??''}',
-                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                  fontSize: 16,
-                                                  color: Colors.black
+                                              SizedBox(height: size.height * 0.01,),
+                                              Text('Gender: ${admin?.patients![index].gender?.toUpperCase()??''}',
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: size.height * 0.01,),
-                                            Text('Age: ${admin?.patients![index].age??''}',
-                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                  fontSize: 16,
-                                                  color: Colors.black
+                                              SizedBox(height: size.height * 0.01,),
+                                              Text('Age: ${admin?.patients![index].age??''}',
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: size.height * 0.01,),
-                                            Text('Phone Number: ${admin?.patients![index].phoneNumber??''}',
-                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                  fontSize: 16,
-                                                  color: Colors.black
+                                              SizedBox(height: size.height * 0.01,),
+                                              Text('Phone Number: ${admin?.patients![index].phoneNumber??''}',
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                    fontSize: 16,
+                                                    color: Colors.black
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(onPressed: (){
-                                        Navigator.pushNamed(context, ReportsScreen.routeName,arguments: admin?.patients?[index].reports);
-                                      },
-                                          icon: Icon(Icons.arrow_forward_ios,
-                                            color: Colors.white,
-                                            size: 30,
-                                          ))
-                                    ],
+                                        IconButton(onPressed: (){
+                                          Navigator.pushNamed(context, ReportsScreen.routeName,arguments: admin?.patients?[index]);
+                                        },
+                                            icon: Icon(Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ))
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -193,7 +219,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
     });
     OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       // Will be called whenever a notification is opened/button pressed.
-      return navNotify();
+      return navNotify(result);
     });
     OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
       // Will be called whenever a notification is received in foreground
@@ -201,10 +227,11 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
         event.complete(event.notification);
     });
   }
-  void navNotify()async{
-    await Navigator.pushNamed(context, NotificationAdminScreen.routeName,arguments: preferences?.getString('tokenAdmin'));
+  void navNotify(OSNotificationOpenedResult result)async{
+    if(result.notification.body == 'Fall Detected') {
+      await Navigator.pushNamed(context, NotificationAdminScreen.routeName,
+          arguments: preferences?.getString('tokenAdmin'));
+    }
   }
 }
-
-
 

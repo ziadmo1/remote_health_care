@@ -135,7 +135,7 @@ class Patients {
 class Reports {
   int? spo2;
   int? heartRate;
-  double? temperature;
+  String? temperature;
   String? createdAt;
   String? sId;
 
