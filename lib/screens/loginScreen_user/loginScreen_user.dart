@@ -10,7 +10,6 @@ import '../loginScreen_admin/widgets/materialBtn.dart';
 import '../loginScreen_admin/widgets/textButton.dart';
 import '../loginScreen_admin/widgets/textForm.dart';
 
-
 class LoginScreenUser extends StatefulWidget {
   static const String routeName = 'loginPatient';
 
@@ -28,11 +27,13 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: (){
-          Navigator.pushReplacementNamed(context, AuthScreen.routeName);
-        }, icon: Icon(Icons.arrow_back_ios)),
-      ),
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+              },
+              icon: Icon(Icons.arrow_back_ios)),
+        ),
         body: Center(
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
@@ -104,35 +105,41 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
                       height: size.height * 0.03,
                     ),
                     MaterialBtn(
-                      'Not have an account? ',
-                      'Sign up',
-                      () =>                       Navigator.pushReplacementNamed(context, SignUpUser.routeName)
-                    ),
+                        'Not have an account? ',
+                        'Sign up',
+                        () => Navigator.pushReplacementNamed(
+                            context, SignUpUser.routeName)),
                     SizedBox(
                       height: size.height * 0.03,
                     ),
-                     TextButtoon('Login', () async {
-                            if (formKey.currentState!.validate()) {
-                              showLoading(context, 'Loading....',
-                                  isCancelable: false);
-                              var auth = await ApiManager.loginAccountUser(idController.text, passController.text);
-                              await Future.delayed(Duration(seconds: 1), () {
-                                hideLoading(context);
-                              });
-                              if (auth.isSuccess == true) {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                prefs.setString('userId',auth.data?.patient?.sId??'');
-                                prefs.setString('devId',auth.data?.patient?.device?.deviceId??'');
-                                Navigator.pushReplacementNamed(
-                                    context, HomeScreenUser.routeName,);
-                              } else {
-                                showMessage(context,
-                                    dialogType: DialogType.error,
-                                    desc: auth.message ?? '',
-                                    btnOkOnPress: () {});
-                              }
-                            }
-                          })
+                    TextButtoon('Login', () async {
+                      if (formKey.currentState!.validate()) {
+                        showLoading(context, 'Loading....',
+                            isCancelable: false);
+                        var auth = await ApiManager.loginAccountUser(
+                            idController.text, passController.text);
+                        await Future.delayed(Duration(seconds: 1), () {
+                          hideLoading(context);
+                        });
+                        if (auth.isSuccess == true) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString(
+                              'userId', auth.data?.patient?.sId ?? '');
+                          prefs.setString('devId',
+                              auth.data?.patient?.device?.deviceId ?? '');
+                          Navigator.pushReplacementNamed(
+                            context,
+                            HomeScreenUser.routeName,
+                          );
+                        } else {
+                          showMessage(context,
+                              dialogType: DialogType.error,
+                              desc: auth.message ?? '',
+                              btnOkOnPress: () {});
+                        }
+                      }
+                    })
                   ],
                 ),
               ),
@@ -141,4 +148,3 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
         ));
   }
 }
-

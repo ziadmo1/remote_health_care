@@ -32,7 +32,7 @@ class NotificationScreen extends StatelessWidget {
               var user = snapshot.data?.data?.patient;
               return ListView.builder(
                   physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => NotificationWidget(user!.adminsRequests![index],user),
+                  itemBuilder: (context, index) => NotificationWidget(user!.adminsRequests!.reversed.toList()[index],user),
                   itemCount: user?.adminsRequests?.length
               );
             }));

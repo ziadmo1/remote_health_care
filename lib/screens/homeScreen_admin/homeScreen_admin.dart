@@ -111,6 +111,15 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                             ],
                           ),
                           SizedBox(height: size.height * 0.02,),
+                          patients?.length == 0? Column(
+                            children: [
+                              Icon(Icons.person,size: 100,),
+                              SizedBox(height: 5,),
+                              Text('You don\'t have any patient.',style: TextStyle(
+                                  fontSize: 16
+                              ),)
+                            ],
+                          ) :
                           ListView.separated(
                             shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),

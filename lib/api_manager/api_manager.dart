@@ -45,6 +45,15 @@ class ApiManager{
     var json = jsonDecode(response.body);
     return AuthAdminRes.fromJson(json);
   }
+  static Future<AuthUserRes> loginAccountUser(String deviceId,String pass)async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/patients/signin');
+    var response = await http.post(url,body: {
+      "deviceId": deviceId,
+      "password": pass,
+    });
+    var json = jsonDecode(response.body);
+    return AuthUserRes.fromJson(json);
+  }
   static Future<SearchRes> patientsSearch(String query,String email)async{
     var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/patients',{
       'deviceId' : query,
@@ -126,14 +135,5 @@ class ApiManager{
     return HomeUserRes.fromJson(json);
   }
 
-  static Future<AuthUserRes> loginAccountUser(String deviceId,String pass)async{
-    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/patients/signin');
-    var response = await http.post(url,body: {
-      "deviceId": deviceId,
-      "password": pass,
-    });
-    var json = jsonDecode(response.body);
-    return AuthUserRes.fromJson(json);
-  }
 }
 

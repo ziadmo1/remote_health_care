@@ -222,7 +222,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                     padding: EdgeInsets.all(size.width * 0.03),
                     width: double.infinity,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
                           'Your Care Giver',
@@ -235,6 +235,15 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                         SizedBox(
                           height: size.height * 0.02,
                         ),
+                        patientAdmin?.length == 0? Column(
+                          children: [
+                            Icon(Icons.person,size: 100,),
+                            SizedBox(height: 5,),
+                            Text('You don\'t have any care giver.',style: TextStyle(
+                              fontSize: 16
+                            ),)
+                          ],
+                        ) :
                         ListView.separated(
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) => Dismissible(

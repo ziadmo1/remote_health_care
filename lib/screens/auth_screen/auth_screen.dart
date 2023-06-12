@@ -24,7 +24,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         )
       ),
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Column(
           children: [

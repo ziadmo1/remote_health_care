@@ -35,7 +35,7 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
                   ),
                 );
               }
-              var notify = snapshot.data?.data?.admin?.emergencies;
+              var notify = snapshot.data?.data?.admin?.emergencies?.reversed.toList();
               return ListView.builder(
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) => NotificationAdminWidget(notify![index]),
