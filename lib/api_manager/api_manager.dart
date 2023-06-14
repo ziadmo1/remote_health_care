@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:remote_healthcare/screens/homeScreen_user/models/HomeUserRes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../screens/loginScreen_admin/models/AuthAdminRes.dart';
 import '../screens/loginScreen_user/models/AuthUserRes.dart';
 import '../screens/notificationScreenAdmin/models/notifyAdminRes.dart';

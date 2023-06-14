@@ -69,6 +69,7 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                   ),
                   TextFiield(
                       controller: nameController,
+                      keyboard: TextInputType.name,
                       hint: 'Full Name',
                       prefIcon: Icons.person_outline,
                       validate: (text) {
@@ -82,6 +83,7 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                   ),
                   TextFiield(
                     hint: 'Phone Number',
+                    keyboard: TextInputType.phone,
                     prefIcon: Icons.phone,
                     validate: (text) {
                       if (text == null || text.trim().isEmpty) {
@@ -96,6 +98,7 @@ class _SignUpAdminState extends State<SignUpAdmin> {
                   ),
                   TextFiield(
                       controller: emailController,
+                      keyboard: TextInputType.emailAddress,
                       hint: 'Email Address',
                       prefIcon: Icons.email_outlined,
                       validate: (text) {

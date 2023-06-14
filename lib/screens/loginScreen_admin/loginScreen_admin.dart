@@ -63,6 +63,7 @@ class _LoginScreenAdminState extends State<LoginScreenAdmin> {
                     ),
                     TextFiield(
                         hint: 'Email Address',
+                        keyboard: TextInputType.emailAddress,
                         controller: emailController,
                         prefIcon: Icons.health_and_safety,
                         validate: (text) {

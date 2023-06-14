@@ -64,6 +64,7 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
                     TextFiield(
                         hint: 'Device Id',
                         controller: idController,
+                        keyboard: TextInputType.number,
                         prefIcon: Icons.health_and_safety,
                         validate: (text) {
                           if (text == null || text.trim().isEmpty) {

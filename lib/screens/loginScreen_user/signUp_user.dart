@@ -66,6 +66,7 @@ class _SignUpUserState extends State<SignUpUser> {
                     ),
                     TextFiield(
                       hint: 'Full Name',
+                      keyboard: TextInputType.name,
                       prefIcon: Icons.person_outline,
                       validate: (text) {
                         if (text == null || text.trim().isEmpty) {
@@ -79,6 +80,7 @@ class _SignUpUserState extends State<SignUpUser> {
                       height: size.height * 0.015,
                     ),
                     TextFiield(
+                      keyboard: TextInputType.phone,
                       hint: 'Phone Number',
                       prefIcon: Icons.phone,
                       validate: (text) {
@@ -93,6 +95,7 @@ class _SignUpUserState extends State<SignUpUser> {
                       height: size.height * 0.015,
                     ),
                     TextFiield(
+                        keyboard: TextInputType.number,
                         controller: idController,
                         hint: 'Device Id',
                         prefIcon: Icons.health_and_safety,
