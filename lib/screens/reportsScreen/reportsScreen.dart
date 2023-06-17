@@ -213,13 +213,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         children: [
                           Column(
                             children: [
-                              Text('spo2'.toUpperCase(),  style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
-                      ),
-                      ),
+                              Text('heart rate'.toUpperCase(),style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                              ),),
                               SizedBox(height: 5,),
-                              Text(reports[index].spo2.toString(),style: TextStyle(
+                              Text(reports[index].heartRate.toString(),style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold
                               ),)
@@ -227,12 +226,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                           Column(
                             children: [
-                              Text('heart rate'.toUpperCase(),style: TextStyle(
+                              Text('spo2'.toUpperCase(),  style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold
-                              ),),
+                              ),
+                              ),
                               SizedBox(height: 5,),
-                              Text(reports[index].heartRate.toString(),style: TextStyle(
+                              Text(reports[index].spo2.toString(),style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold
                               ),)

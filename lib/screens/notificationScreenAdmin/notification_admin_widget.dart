@@ -25,7 +25,6 @@ class _NotificationAdminWidgetState extends State<NotificationAdminWidget> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Container(
           padding: EdgeInsets.all(size.width * 0.03),
-          height: size.height * 0.18,
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
