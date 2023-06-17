@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 import 'package:remote_healthcare/screens/homeScreen_user/models/HomeUserRes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../alert_dialog/alert_dialog.dart';
 import '../../api_manager/api_manager.dart';
 import '../../themes/myTheme.dart';
 import '../auth_screen/auth_screen.dart';
@@ -56,6 +57,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
       appBar: AppBar(
         leading: IconButton(onPressed: ()async{
           await prefs.remove('userId');
+          await prefs.remove('devId');
           Navigator.pushReplacementNamed(
             context,
             AuthScreen.routeName,
@@ -341,7 +343,61 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                       ],
                     ),
                   ),
-                )
+                ),
+                SizedBox(height: 25,),
+                InkWell(
+                  onTap: (){
+                    showDialog(context: context, builder: (context) => AlertDialog(
+                      backgroundColor: Colors.white,
+                      content: Text('Are you sure?',style:TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black
+                      ),
+                      ),
+                      actions: [
+                        TextButton(onPressed: (){
+                          Navigator.pop(context);
+                        }, child: Text('Cancel',style:TextStyle(
+                          fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: MyTheme.lightOrange
+                        ),)),
+                        TextButton(onPressed: ()async{
+                          showLoading(context, 'Loading....',
+                              isCancelable: false);
+                          var auth = await ApiManager.deleteAccPatient(patient?.sId??'');
+                          hideLoading(context);
+                          if (auth.isSuccess == true) {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                           await prefs.remove('userId');
+                           await prefs.remove('devId');
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => AuthScreen(),),(route)=>false);
+                          }
+                        }, child: Text('Ok',style:TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: MyTheme.lightOrange
+                        ),)),
+                      ],
+                    ),);
+                  },
+                  child: Card(
+                    elevation: 4,
+                    child: Container(
+                      width: 150,
+                      alignment: Alignment.center,
+                      height: 40,
+                      color: Colors.red,
+                      child: Text('Delete Account',style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black
+                      ),),
+                    ),
+                  ),
+                ),
               ]),
             );
           }),

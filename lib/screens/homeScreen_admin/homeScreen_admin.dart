@@ -5,6 +5,7 @@ import 'package:remote_healthcare/screens/loginScreen_admin/models/AuthAdminRes.
 import 'package:remote_healthcare/screens/searchScreen/searchScreen.dart';
 import 'package:remote_healthcare/themes/myTheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../alert_dialog/alert_dialog.dart';
 import '../auth_screen/auth_screen.dart';
 import '../notificationScreenAdmin/notificationScreenAdmin.dart';
 import '../reportsScreen/reportsScreen.dart';
@@ -210,7 +211,65 @@ class _HomeScreenAdminState extends State<HomeScreenAdmin> {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(height: 25,),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 110.0),
+                    child: InkWell(
+                      onTap: (){
+                        showDialog(
+                          context: context, builder: (context) => AlertDialog(
+                          backgroundColor: Colors.white,
+                          content: Text('Are you sure?',style:TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black
+                          ),
+                          ),
+                          actions: [
+                            TextButton(onPressed: (){
+                              Navigator.pop(context);
+                            }, child: Text('Cancel',style:TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: MyTheme.lightOrange
+                            ),)),
+                            TextButton(
+                                onPressed: ()async{
+                              showLoading(context, 'Loading....',
+                                  isCancelable: false);
+                              var auth = await ApiManager.deleteAccAdmin(admin?.sId??'');
+                              hideLoading(context);
+                              if (auth.isSuccess == true) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.remove('tokenAdmin');
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => AuthScreen(),),(route)=>false);
+                              }
+                            }, child: Text('Ok',style:TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: MyTheme.lightOrange
+                            ),)),
+                          ],
+                        ),);
+                      },
+                      child: Card(
+                        elevation: 4,
+                        child: Container(
+                          width: 150,
+                          alignment: Alignment.center,
+                          height: 40,
+                          color: Colors.red,
+                          child: Text('Delete Account',style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black
+                          ),),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

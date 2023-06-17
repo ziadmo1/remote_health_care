@@ -133,6 +133,22 @@ class ApiManager{
     var json = jsonDecode(response.body);
     return HomeUserRes.fromJson(json);
   }
+  static Future<HomeUserRes> deleteAccPatient(String id)async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/patients/delete');
+    var response = await http.post(url,body: {
+      'id' : id,
+    });
+    var json = jsonDecode(response.body);
+    return HomeUserRes.fromJson(json);
+  }
+  static Future<HomeUserRes> deleteAccAdmin(String id)async{
+    var url = Uri.https('remote-healthcare-server.vercel.app', '/v2/users/admins/delete');
+    var response = await http.post(url,body: {
+      'id' : id,
+    });
+    var json = jsonDecode(response.body);
+    return HomeUserRes.fromJson(json);
+  }
 
 }
 

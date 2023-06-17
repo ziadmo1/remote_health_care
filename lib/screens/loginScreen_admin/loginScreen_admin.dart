@@ -65,7 +65,7 @@ class _LoginScreenAdminState extends State<LoginScreenAdmin> {
                         hint: 'Email Address',
                         keyboard: TextInputType.emailAddress,
                         controller: emailController,
-                        prefIcon: Icons.health_and_safety,
+                        prefIcon: Icons.email_outlined,
                         validate: (text) {
                           if (text == null || text.trim().isEmpty) {
                             return 'Email Address must not be empty';
